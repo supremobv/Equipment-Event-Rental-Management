@@ -1,0 +1,15 @@
+# Local configuration and secrets
+**/.env
+**/.env.*
+!**/.env.example
+**/.local/
+**/auth.json
+
+# Runtime data and backups
+**/*.sqlite*
+**/*.sql
+**/*.log
+**/vendor/
+**/node_modules/
+**/.phpunit.cache/
+**/.phpunit.result.cache

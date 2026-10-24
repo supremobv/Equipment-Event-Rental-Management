@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: Rental Workspace Availability API
+  version: 1.0.0
+  description: Same-origin, staff-session authenticated availability. No public API keys.
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /api/v1/availability:
+    get:
+      operationId: getAvailability
+      summary: Read available equipment for inclusive rental dates
+      security:
+        - staffSession: []
+      parameters:
+        - name: starts_on
+          in: query
+          schema: {type: string, format: date}
+        - name: ends_on
+          in: query
+          schema: {type: string, format: date}
+      responses:
+        '200':
+          description: Available stock; amounts in integer cents
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [starts_on, ends_on, data]
+                properties:
+                  starts_on: {type: string, format: date}
+                  ends_on: {type: string, format: date}
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, sku, name, quantity, available, daily_rate_cents]
+                      properties:
+                        id: {type: integer}
+                        sku: {type: string}
+                        name: {type: string}
+                        quantity: {type: integer, minimum: 0}
+                        available: {type: integer, minimum: 0}
+                        daily_rate_cents: {type: integer, minimum: 0}
+        '401': {description: Authentication required when Accept is application/json}
+        '302': {description: Sign-in or account password change redirect}
+        '422': {description: Invalid dates}
+        '429': {description: Rate limit exceeded}
+components:
+  securitySchemes:
+    staffSession:
+      type: apiKey
+      in: cookie
+      name: gather_rentals_session
+      description: Obtained through same-origin web login; actual cookie name follows APP_NAME.

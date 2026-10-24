@@ -1,0 +1,1 @@
+@props(['status'])<span class="badge {{ $status }}"><i></i>{{ match($status){'out'=>'Checked out','quote'=>'Quote','confirmed'=>'Confirmed','returned'=>'Returned','cancelled'=>'Cancelled',default=>ucfirst($status)} }}</span>
